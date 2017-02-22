@@ -89,4 +89,3 @@ int main(int argc, char **argv) {
     // main program essentially hangs here, but it must stay alive to keep the callback function alive
     return 0; // should never get here, unless roscore dies
 }
-
