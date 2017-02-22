@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
     pose_stamped.pose.position.x = -3.0;
     path_srv.request.nav_path.poses.push_back(pose_stamped);
 
-    // go north 1
+    // go north 1.1
     quat = convertPlanarPhi2Quaternion(pi / 2.0);
     pose_stamped.pose.orientation = quat;
     pose_stamped.pose.position.y = 1.1;
