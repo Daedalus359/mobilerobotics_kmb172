@@ -16,9 +16,9 @@ void doneCb(const actionlib::SimpleClientGoalState& state, const kmb172_ps4::p4m
 }
 
 //TODO: fix this function, which caused issues
-/*void alarm_Callback(const std_msgs::bool& message_holder){
+void alarm_Callback(const std_msgs::bool& message_holder){
 	alarm_active = message_holder.data;//keeps this global var up to date with alarm state
-}*/
+}
 
 int main(int argc, char** argv){
 	ros::init(argc, argv, "path_action_client");//make node
@@ -30,7 +30,7 @@ int main(int argc, char** argv){
 	//make a subscriber that keeps track of the alarm state
 	//alarm status gets stored in alarm_active
 	//TODO: fix the following line, it was causing issues
-	//ros::Subscriber alarm_monitor = n.subscribe("lidar_alarm",1,alarm_Callback);
+	ros::Subscriber alarm_monitor = n.subscribe("lidar_alarm",1,alarm_Callback);
 
 	kmb172_ps4::p4msgGoal goal;//create goal object to pack message into
 	actionlib::SimpleActionClient<kmb172_ps4::p4msgAction> action_client("p4_action", true);
