@@ -16,7 +16,7 @@ void doneCb(const actionlib::SimpleClientGoalState& state, const kmb172_ps4::p4m
 }
 
 //TODO: fix this function, which caused issues
-void alarm_Callback(const std_msgs::bool& message_holder){
+void alarm_Callback(const std_msgs::Bool& message_holder){
 	alarm_active = message_holder.data;//keeps this global var up to date with alarm state
 }
 
