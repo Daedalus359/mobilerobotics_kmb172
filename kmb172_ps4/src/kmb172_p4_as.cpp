@@ -98,7 +98,7 @@ const double g_sample_dt = 0.01;
 const double g_dist_tol = 0.01; // 1cm
 //global variables, including a publisher object
 geometry_msgs::Twist g_twist_cmd;
-ros::Publisher g_twist_commander; //global publisher object
+ros::Publisher g_twist_commander = nh.advertise<geometry_msgs::Twist>("/robot0/cmd_vel", 1); //global publisher object
 geometry_msgs::Pose g_current_pose; // not really true--should get this from odom 
 
 //signum function: strip off and return the sign of the argument
