@@ -21,6 +21,7 @@ double sgn(double x);
 double min_spin(double spin_angle);
 double convertPlanarQuat2Phi(geometry_msgs::Quaternion quaternion);
 geometry_msgs::Quaternion convertPlanarPhi2Quaternion(double phi);
+ros::Publisher g_twist_commander;
 
 void do_halt();
 void do_move(double distance);
@@ -82,7 +83,7 @@ int main(int argc, char** argv){
 	ros::init(argc, argv, "p4_action_server");
 	ros::NodeHandle nh_;
 	
-	ros::Publisher g_twist_commander = nh_.advertise<geometry_msgs::Twist>("/robot0/cmd_vel", 1); //global publisher object
+	g_twist_commander = nh_.advertise<geometry_msgs::Twist>("/robot0/cmd_vel", 1); //global publisher object
 	
 	ps4ActionServer as_object;
 
