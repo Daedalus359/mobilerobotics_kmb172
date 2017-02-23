@@ -82,6 +82,8 @@ int main(int argc, char** argv){
 	ros::init(argc, argv, "p4_action_server");
 	ros::NodeHandle nh_;
 	
+	ros::Publisher g_twist_commander = nh_.advertise<geometry_msgs::Twist>("/robot0/cmd_vel", 1); //global publisher object
+	
 	ps4ActionServer as_object;
 
 	ROS_INFO("going into spin");
@@ -98,7 +100,6 @@ const double g_sample_dt = 0.01;
 const double g_dist_tol = 0.01; // 1cm
 //global variables, including a publisher object
 geometry_msgs::Twist g_twist_cmd;
-ros::Publisher g_twist_commander = nh_.advertise<geometry_msgs::Twist>("/robot0/cmd_vel", 1); //global publisher object
 geometry_msgs::Pose g_current_pose; // not really true--should get this from odom 
 
 //signum function: strip off and return the sign of the argument
