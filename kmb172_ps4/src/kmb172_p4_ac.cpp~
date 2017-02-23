@@ -3,30 +3,37 @@
 
 #include<ros/ros.h>
 #include<actionlib/server/simple_action_server.h>
-#include<kmb172_ps4/p4msg.h>
-#include<std_msgs>
+#include <actionlib/client/simple_action_client.h>
+#include<kmb172_ps4/p4msgAction.h>
+#include<std_msgs/Bool.h>
+#include<std_msgs/Float64.h>
 
 bool alarm_active = false;//a global var to hold alarm information
 
 //just here because a line near the bottom points to it
-void doneCb(const actionlib::SimpleClientGoalState& state,
-        const kmb172_ps4::p4msgResultConstPtr& result) {
+void doneCb(const actionlib::SimpleClientGoalState& state, const kmb172_ps4::p4msgResultConstPtr& result) {
+	ROS_INFO("DONE");
 }
 
-void alarm_Callback(const std_msgs::bool& message_holder){
+//TODO: fix this function, which caused issues
+/*void alarm_Callback(const std_msgs::bool& message_holder){
 	alarm_active = message_holder.data;//keeps this global var up to date with alarm state
-}
+}*/
 
 int main(int argc, char** argv){
-	ros::init(argc, argv, "path action client");//make node
+	ros::init(argc, argv, "path_action_client");//make node
 	ros::NodeHandle n;
+
+	bool cancellation = false;//whether a goal cancellation has been ordered
+	kmb172_ps4::p4msgGoal altGoal;//in case the first goal is cancelled
 
 	//make a subscriber that keeps track of the alarm state
 	//alarm status gets stored in alarm_active
-	ros::Subscriber alarm_monitor = n.subscribe("lidar_alarm",1,alarm_Callback);
+	//TODO: fix the following line, it was causing issues
+	//ros::Subscriber alarm_monitor = n.subscribe("lidar_alarm",1,alarm_Callback);
 
 	kmb172_ps4::p4msgGoal goal;//create goal object to pack message into
-	actionlib::SimpleActionClient<kbm172_ps4::p4msgAction> action_client("p4_action", true);
+	actionlib::SimpleActionClient<kmb172_ps4::p4msgAction> action_client("p4_action", true);
 	
 	double pi = 3.142;//for easy phi values
 
@@ -112,10 +119,44 @@ int main(int argc, char** argv){
 		}
 		
 		if(alarm_active){//goal cancellation needed
-			action_client.cancel_all_goals;//cancel the goal TODO: is this the correct syntax for this?
-			//TODO: what else to do here? info statement?
+			action_client.cancelGoal();//cancel the goal
+			cancellation = true;
+			ROS_INFO("sending goal cancellation to action server");
 			break;
 		}
+	}
+	
+	if(cancellation){//spin in place if the goal was cancelled
+		next_orientation = (0.0);
+		next_x_move = 0.0;
+		next_y_move = 0.0;
+		
+		altGoal.x_coords.push_back(next_x_move);
+		altGoal.y_coords.push_back(next_y_move);
+		altGoal.phi_vals.push_back(next_orientation);
+
+		next_orientation = (pi / 2.0);
+		altGoal.x_coords.push_back(next_x_move);
+		altGoal.y_coords.push_back(next_y_move);
+		altGoal.phi_vals.push_back(next_orientation);
+
+		next_orientation = (pi);
+		altGoal.x_coords.push_back(next_x_move);
+		altGoal.y_coords.push_back(next_y_move);
+		altGoal.phi_vals.push_back(next_orientation);
+
+		next_orientation = (pi / 2.0);
+		altGoal.x_coords.push_back(next_x_move);
+		altGoal.y_coords.push_back(next_y_move);
+		altGoal.phi_vals.push_back(next_orientation);
+
+		next_orientation = (0.0);
+		altGoal.x_coords.push_back(next_x_move);
+		altGoal.y_coords.push_back(next_y_move);
+		altGoal.phi_vals.push_back(next_orientation);
+
+		action_client.sendGoal(altGoal, &doneCb);
+		
 	}
 	
 	return 0;

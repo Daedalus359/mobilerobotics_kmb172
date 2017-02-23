@@ -12,15 +12,15 @@ find_package(catkin_simple REQUIRED)
 
 
 #uncomment the following 4 lines to use the Eigen library
-#find_package(cmake_modules REQUIRED)
-#find_package(Eigen3 REQUIRED)
-#include_directories(${EIGEN3_INCLUDE_DIR})
-#add_definitions(${EIGEN_DEFINITIONS})
+find_package(cmake_modules REQUIRED)
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+add_definitions(${EIGEN_DEFINITIONS})
 
 catkin_simple()
 
 # example boost usage
-# find_package(Boost REQUIRED COMPONENTS system thread)
+find_package(Boost REQUIRED COMPONENTS system thread)
 
 # C++0x support - not quite the same as final C++11!
 # use carefully;  can interfere with point-cloud library
@@ -32,7 +32,6 @@ catkin_simple()
 # Executables: uncomment the following and edit arguments to compile new nodes
 # may add more of these lines for more nodes from the same package
 # cs_add_executable(example src/example.cpp)
-cs_add_executable(kmb172_lidar_alarm_p4 src/kmb172_lidar_alarm_p4.cpp)
 cs_add_executable(kmb172_p4_ac src/kmb172_p4_ac.cpp)
 cs_add_executable(kmb172_p4_as src/kmb172_p4_as.cpp)
 
