@@ -110,6 +110,7 @@ int main(int argc, char** argv){
 
 	//send the goal for execution
 	action_client.sendGoal(goal, &doneCb);
+	ROS_INFO("Goal message constructed and sent for execution");
 	
 	//monitor the lidar alarm to see if a cancellation is needed
 	while(true){
@@ -120,15 +121,21 @@ int main(int argc, char** argv){
 			break;
 		}
 		
+		ROS_INFO("Checking for alarm");
 		if(alarm_active){//goal cancellation needed
 			action_client.cancelGoal();//cancel the goal
 			cancellation = true;
 			ROS_INFO("sending goal cancellation to action server");
 			break;
 		}
+
+		ros::spinOnce();
 	}
 	
 	if(cancellation){//spin in place if the goal was cancelled
+
+		ROS_INFO("spinning in place due to goal cancellation");		
+			
 		next_orientation = (0.0);
 		next_x_move = 0.0;
 		next_y_move = 0.0;

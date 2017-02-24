@@ -54,25 +54,24 @@ ps4ActionServer::ps4ActionServer() ://TODO: correct for this package?
 }
 
 void ps4ActionServer::executeCB(const actionlib::SimpleActionServer<kmb172_ps4::p4msgAction>::GoalConstPtr& goal){
-	//start moving I guess
-	//do I need to check for cancellations around here?
 	double theta_current = 0.0;//to track current orientation
-	
-	//not being used right now
-	//std_msgs::Float64 x_coords_desired[] = goal->x_coords;
-	//std_msgs::Float64 y_coords_desired[] = goal->y_coords;
-	//std_msgs::Float64 phi_vals_desired[] = goal->phi_vals;
 	
 	int npts = goal->x_coords.size();//get number of poses to be visited
 	double dist = 0.0;
 	double delta_theta = 0.0;
 
-	for(int i=0;i<npts;i++){//TODO: replace 10 with length of goal arrays
+	for(int i=0;i<npts;i++){
 		dist = sqrt(pow(goal->x_coords[i],2.0)+pow(goal->y_coords[i],2.0));//calculate the next move distance
 		delta_theta = (goal->phi_vals[i]) - theta_current;//calculate change in angle
 		do_spin(delta_theta);//assume correct angle
 		theta_current = goal->phi_vals[i];//update current joint angle
 		do_move(dist);//command the move
+		if (as_.isPreemptRequested()){	
+			ROS_WARN("goal cancelled!");
+			result_.completed = false;
+			as_.setAborted(result_); // tell the client we have given up on this goal; send the result message as well
+			return; // done with callback
+		}
 	}
 
 	result_.completed = true;
