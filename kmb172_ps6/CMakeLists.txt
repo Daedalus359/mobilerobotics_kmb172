@@ -35,6 +35,7 @@ cs_add_library(traj_builder_kmb172 src/traj_builder_kmb172.cpp)
 # may add more of these lines for more nodes from the same package
 # cs_add_executable(example src/example.cpp)
 cs_add_executable(pub_des_state_kmb172 src/pub_des_state_kmb172.cpp src/pub_des_state_main_kmb172.cpp)
+cs_add_executable(kmb172_lidar_alarm_p6 src/kmb172_lidar_alarm_p6.cpp)
 
 #the following is required, if desire to link a node in this package with a library created in this same package
 # edit the arguments to reference the named node and named library within this package

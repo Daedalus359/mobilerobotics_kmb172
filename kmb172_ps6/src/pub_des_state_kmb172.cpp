@@ -59,6 +59,7 @@ void DesStatePublisher::initializePublishers() {
     ROS_INFO("Initializing Publishers");
     desired_state_publisher_ = nh_.advertise<nav_msgs::Odometry>("/desState", 1, true);
     des_psi_publisher_ = nh_.advertise<std_msgs::Float64>("/desPsi", 1);
+    velocity_commander = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
 }
 
 bool DesStatePublisher::estopServiceCallback(std_srvs::TriggerRequest& request, std_srvs::TriggerResponse& response) {
@@ -131,7 +132,7 @@ void DesStatePublisher::pub_next_state() {
         }
         //OK...want to resume motion from e-stopped mode;
         else {
-            motion_mode_ = DONE_W_SUBGOAL; //this will pick up where left off
+            motion_mode_ = PURSUING_SUBGOAL; //this will pick up where left off
         }
     }
     
@@ -214,4 +215,5 @@ void DesStatePublisher::pub_next_state() {
             desired_state_publisher_.publish(current_des_state_);
             break;
     }
+    velocity_commander.publish(current_des_state_.twist.twist);
 }

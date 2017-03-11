@@ -411,7 +411,7 @@ void TrajBuilder::build_braking_traj(geometry_msgs::PoseStamped start_pose,
 
     double x_current = current_state.pose.pose.position.x; //current x location
     double y_current = current_state.pose.pose.position.y; //current y location
-    double speed_current = current_state.twist.twist.linear.x;//current x speed component
+    double speed_current = sqrt(current_state.twist.twist.linear.x * current_state.twist.twist.linear.x);//absolute value of current x speed component
     double psi_current = current_state.pose.pose.orientation.z;//current heading angle
 
     nav_msgs::Odometry des_state = current_state;//initialize to current state
@@ -427,6 +427,8 @@ void TrajBuilder::build_braking_traj(geometry_msgs::PoseStamped start_pose,
         des_state.pose.pose.position.y = y_current;
         vec_of_states.push_back(des_state);
     }
+
+    des_state.twist.twist = halt_twist_;//go from a small negative number to actual halt
 
 }
 

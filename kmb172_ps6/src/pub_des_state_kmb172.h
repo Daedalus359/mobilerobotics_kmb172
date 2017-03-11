@@ -64,6 +64,7 @@ private:
     
     ros::Publisher desired_state_publisher_;
     ros::Publisher des_psi_publisher_;
+    ros::Publisher velocity_commander;
     
     //a trajectory-builder object; 
     TrajBuilder trajBuilder_; 

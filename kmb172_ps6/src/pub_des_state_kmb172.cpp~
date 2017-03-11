@@ -1,4 +1,4 @@
-#include "pub_des_state.h"
+#include "pub_des_state_kmb172.h"
 //ExampleRosClass::ExampleRosClass(ros::NodeHandle* nodehandle):nh_(*nodehandle)
 
 DesStatePublisher::DesStatePublisher(ros::NodeHandle& nh) : nh_(nh) {
@@ -131,7 +131,7 @@ void DesStatePublisher::pub_next_state() {
         }
         //OK...want to resume motion from e-stopped mode;
         else {
-            motion_mode_ = DONE_W_SUBGOAL; //this will pick up where left off
+            motion_mode_ = PURSUING_SUBGOAL; //this will pick up where left off
         }
     }
     
@@ -214,4 +214,6 @@ void DesStatePublisher::pub_next_state() {
             desired_state_publisher_.publish(current_des_state_);
             break;
     }
+    velocity_commander = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+    velocity_commander.publish(current_des_state_.twist.twist);
 }
